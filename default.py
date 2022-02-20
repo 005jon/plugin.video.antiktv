@@ -392,6 +392,8 @@ class antiktvContentProvider(ContentProvider):
 			player_id = "5001"
 		elif player_name == "2":
 			player_id = "5002"
+		elif player_name == "4":
+			player_id = "1"
 		else:
 			player_id = "4097"
 

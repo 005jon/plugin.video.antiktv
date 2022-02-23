@@ -29,26 +29,40 @@ key_cache={}
 
 XMLEPG_DATA_FILE = 'antiktv.data.xml'
 XMLEPG_CHANNELS_FILE = 'antiktv.channels.xml'
-XMLEPG_SOURCES_FILE = '/etc/epgimport/antiktv.sources.xml'
-EPGIMPORT_SETTINGS_FILE = '/etc/enigma2/epgimport.conf'
+#XMLEPG_SOURCES_FILE = '/etc/epgimport/antiktv.sources.xml'
+#EPGIMPORT_SETTINGS_FILE = '/etc/enigma2/epgimport.conf'
+XMLEPG_SOURCES_FILE = '/etc/epgload/antiktv.sources.xml'
+EPGIMPORT_SETTINGS_FILE = '/etc/epgload/epgimport.conf'
 PROXY_VER='2'
 
-XMLEPG_SOURCES_CONTENT ='''<?xml version="1.0" encoding="utf-8"?>
+#############  epgload ############
+XMLEPG_SOURCES_CONTENT ='''<?xml version="1.0" encoding="latin-1"?>
 <sources>
-  <mappings>
-      <channel name="antiktv.channels.xml">
-        <url>%s</url>
-      </channel>
-  </mappings>
-  <sourcecat sourcecatname="AntikTV">
-    <source type="gen_xmltv" channels="antiktv.channels.xml">
-      <description>AntikTV</description>
-      <url>%s</url>
-    </source>
-  </sourcecat>
+
+	<sourcecat sourcecatname="AntikTV XMLTV">
+		<source type="gen_xmltv" nocheck="1" channels="//localhost%s">
+			<description>Antik IPTV</description>
+			<url>//localhost%s</url>
+		</source>
+	</sourcecat>
 </sources>
 '''
-
+############# epgimport ####################
+#<?xml version="1.0" encoding="utf-8"?>
+#<sources>
+#  <mappings>
+#      <channel name="antiktv.channels.xml">
+#        <url>%s</url>
+#      </channel>
+#  </mappings>
+#  <sourcecat sourcecatname="AntikTV">
+#    <source type="gen_xmltv" channels="antiktv.channels.xml">
+#      <description>AntikTV</description>
+#      <url>%s</url>
+#    </source>
+#  </sourcecat>
+#</sources>
+#'''
 # #################################################################################################
 
 def load_settings():
@@ -269,8 +283,9 @@ def generate_xmlepg_if_needed():
 		return
 	
 	# check if epgimport plugin exists
-	epgimport_check_file = '/usr/lib/enigma2/python/Plugins/Extensions/EPGImport/__init__.py'
-	if not os.path.exists( epgimport_check_file ) and not os.path.exists( epgimport_check_file + 'o' ) and not os.path.exists( epgimport_check_file + 'c' ):
+#	epgimport_check_file = '/usr/lib/enigma2/python/Plugins/Extensions/EPGImport/__init__.py'
+	epgimport_check_file = '/usr/lib/enigma2/python/Plugins/Extensions/EPGLoad/__init__.py'
+        if not os.path.exists( epgimport_check_file ) and not os.path.exists( epgimport_check_file + 'o' ) and not os.path.exists( epgimport_check_file + 'c' ):
 		print("[XMLEPG] epgimport plugin not detected")
 		return
 	
@@ -300,8 +315,8 @@ def generate_xmlepg_if_needed():
 		print("[XMLEPG] something's failed by generating epg")
 
 	# generate proper sources file for epgimport
-	if not os.path.exists('/etc/epgimport'):
-		os.mkdir( '/etc/epgimport')
+#	  if not os.path.exists('/etc/epgimport'):
+#		os.mkdir( '/etc/epgimport')
 	
 	xmlepg_source_content = XMLEPG_SOURCES_CONTENT % (channels_file, data_file)
 	xmlepg_source_content_md5 = MD5.new( xmlepg_source_content ).hexdigest()
@@ -376,3 +391,10 @@ if __name__ == '__main__':
 		os.remove( pidfile )
 	except:
 		pass
+
+
+
+
+
+
+
